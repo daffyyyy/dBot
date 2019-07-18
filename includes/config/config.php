@@ -7,8 +7,9 @@ $config['connect'] =
     'login' => 'serveradmin',
     'password' => 'gsHsIRCL',
     'query_port' => 10011,
+    'channel' => 64,
 
-    'connect_channel' => 1,
+    'lobby' => 1,
 ];
 
 $config['function'] = 
@@ -16,40 +17,31 @@ $config['function'] =
         1 => 
         [
             'instance_name' => '⭐ dBot @ Olcia',
-            'functions' => ['random_sname', 'channel_poke', 'channel_group', 'server_status', 'group_online'],
+            'functions' => ['random_server_name', 'server_status', 'group_online', 'online_server_name', 'welcome_message'],
 
-            'random_sname' => 
+            'random_server_name' => 
             [
                 'status' => true,
                 'names' => ['✯ daffyy.pro ✯ - Prywatny timspik czy', "✯ daffyy.pro ✯ - Programista / Web Developer / Freelancer", 
                 '✯ daffyy.pro ✯ - Gramy i kodzimy!'],
 
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+            ],
+
+            'online_server_name' => 
+            [
+                'status' => false,
+                'name' => 'Nazwa serwera - [online]/[max]',
+
                 'interval' => ['hours' => 0, 'minutes' => 1, 'seconds' => 0],
             ],
 
-            'channel_poke' =>
+            'welcome_message' => 
             [
                 'status' => true,
-                'channels' =>
-                [
-                    41 => 10,
-                ],
-                'admin_message' =>  'Ktoś oczekuje twojej pomocy!',
-                'user_message' =>   'Administracja została powiadomiona o twojej obecności',
+                'message' => 'test [nick] [groups]',
 
-                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
-            ],
-
-            'channel_group' =>
-            [
-                'status' => true,
-                'channels' =>
-                [
-                    62 => 11,
-                ],
-                'user_message' =>   'Grupa [b][group][/b] została nadana',
-
-                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 1],
             ],
 
             'server_status' =>
@@ -79,6 +71,49 @@ $config['function'] =
                 'description' => ['head' => '[center][b]Lista online[/b][/center]\n\n', 'status' => ['online' => '[nick] - ONLINE', 'offline' => '[nick] - OFFLINE']],
 
                 'interval' => ['hours' => 0, 'minutes' => 1, 'seconds' => 0],
+            ],
+
+        ],
+        2 =>
+        [
+            'instance_name' => '⭐ dBot @ Mandaryna',
+            'functions' => ['channel_poke', 'channel_group', 'anty_vpn'],
+
+            'channel_poke' =>
+            [
+                'status' => true,
+                'channels' =>
+                [
+                    41 => 10,
+                ],
+                'admin_message' =>  'Ktoś oczekuje twojej pomocy!',
+                'user_message' =>   'Administracja została powiadomiona o twojej obecności',
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+            ],
+
+            'channel_group' =>
+            [
+                'status' => true,
+                'channels' =>
+                [
+                    62 => 11,
+                ],
+                'user_message' =>   'Grupa [b][group][/b] została nadana',
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+            ],
+
+            'anty_vpn' =>
+            [
+                'status' => false,
+                'email' => 'xdaffe01@gmail.com',
+                'type' => 1,
+                'reason' => 'Wyłącz program do maskowania IP!',
+                'allowed' => 10,
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 30],
+
             ]
 
         ]

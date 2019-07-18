@@ -38,13 +38,16 @@ Class dBot
             $this->query->selectServer($config['connect']['port']);
             $this->query->setName($config['function']['instance_name']);
             $core = $this->query->getElement('data', $this->query->whoAmI());
-            //$this->query->clientMove($core['client_id'],$config['function']['move_channel']);
+            $this->query->clientMove($core['client_id'],$config['connect']['channel']);
+
+            $this->query->execOwnCommand(0, 'servernotifyregister event=server');
+            //var_dump($this->query->execOwnCommand(0, 'servernotifyregister event=textprivate'));
+
             while (true)
             {
-                $this->clients = $this->query->getElement('data', $this->query->clientList('-groups -voice -away -times -uid -country -info'));
+                $this->joined = $this->query->getElement('data', $this->query->execOwnCommand(2, 'servernotifyregister event=channel id='.$config['connect']['lobby']));
+                $this->clients = $this->query->getElement('data', $this->query->clientList('-groups -voice -away -times -uid -country -info -ip'));
                 $this->serverInfo = $this->query->getElement('data', $this->query->serverInfo());
-                $this->query->execOwnCommand(0, 'servernotifyregister event=server');
-                $this->query->execOwnCommand(0, 'servernotifyregister event=textprivate');
                 foreach($config['function']['functions'] as $function)
                 {
                     if($this->checkInterval($events, $function))
@@ -52,8 +55,9 @@ Class dBot
                         $function();
                     }
                 }
-                sleep(0);
+                sleep(1);
             }
+            echo 1;
         }
         else{
             die("[⭐] Nie udało się połączyć sprawdz config").ENDLINE;
@@ -63,6 +67,7 @@ Class dBot
     public function run()
     {
         $this->connect();
+        echo 1;
     }
 
     public function query()
@@ -73,6 +78,11 @@ Class dBot
     public function info()
     {
         return ['clients' => $this->clients, 'server' => $this->serverInfo];
+    }
+
+    public function joined()
+    {
+        return $this->joined;
     }
 
     public function hasGroup($client ,$group)
@@ -96,6 +106,20 @@ Class dBot
         $fp = @fsockopen($ip, $port, $errno, $errstr, 1);
         if ($fp)
             return true;
+
+        return false;
+    }
+
+    public function group_name($group)
+    {
+        $group_name = $this->query->serverGroupList()['data'];
+        for ($v = 0; $v <= count($group_name) - 1; $v++)
+        {
+            if ($group_name[$v]['sgid'] == $group)
+            {
+                return $group_name[$v]['name'];
+            }
+        }
 
         return false;
     }
