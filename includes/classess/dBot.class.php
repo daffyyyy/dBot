@@ -4,8 +4,7 @@ Class dBot
     public function __construct()
     {
         global $config;
-        $this->query = new ts3admin($config['connect']['ip'], $config['connect']['port']);
-        $this->cache = [];
+        $this->query = new ts3admin($config['connect']['ip'], $config['connect']['query_port']);
     }
 
     public function __destruct()
@@ -28,15 +27,15 @@ Class dBot
 
         if ($this->query->getElement('success', $this->query->connect()))
         {
-            echo "[*] Włączanie instancji".END;
+            echo "[⭐] Włączanie instancji".ENDLINE;
             if ($this->query->getElement('success', $this->query->login($config['connect']['login'], $config['connect']['password']))){
-                echo "[*] Zalogowano na serwer".END;
+                echo "[⭐] Zalogowano na serwer".ENDLINE;
             }
             else{
-                echo "[*] Nie udało się zalogować do serwera".END;
+                echo "[⭐] Nie udało się zalogować do serwera".ENDLINE;
                 exit;
             }
-            $this->query->selectServer(9987);
+            $this->query->selectServer($config['connect']['port']);
             $this->query->setName($config['function']['instance_name']);
             $core = $this->query->getElement('data', $this->query->whoAmI());
             //$this->query->clientMove($core['client_id'],$config['function']['move_channel']);
@@ -46,7 +45,6 @@ Class dBot
                 $this->serverInfo = $this->query->getElement('data', $this->query->serverInfo());
                 $this->query->execOwnCommand(0, 'servernotifyregister event=server');
                 $this->query->execOwnCommand(0, 'servernotifyregister event=textprivate');
-                
                 foreach($config['function']['functions'] as $function)
                 {
                     if($this->checkInterval($events, $function))
@@ -54,12 +52,11 @@ Class dBot
                         $function();
                     }
                 }
-            
-                sleep(1);
+                sleep(0);
             }
         }
         else{
-            die("[*] Nie udało się połączyć sprawdz config").END;
+            die("[⭐] Nie udało się połączyć sprawdz config").ENDLINE;
         }
     }
 
@@ -70,7 +67,7 @@ Class dBot
 
     public function query()
     {
-        return $this->query();
+        return $this->query;
     }
 
     public function info()
@@ -78,18 +75,29 @@ Class dBot
         return ['clients' => $this->clients, 'server' => $this->serverInfo];
     }
 
-    public function getCache($key)
+    public function hasGroup($client ,$group)
     {
-        $cache = $this->cache[$key];
-        if ($cache)
-            return $cache;
+        $groups = explode(',', $this->query->clientInfo($client)['data']['client_servergroups']);
+        if (is_array($group))
+        {
+            for ($i = 0; $i <= count($group) - 1; $i++)
+            {
+                if (in_array($group[$i], $groups))
+                    return true;
+            }
+        } elseif (in_array($group, $groups))
+            return true;
+
         return false;
     }
 
-    public function setCache($key, $value, $time)
+    public function server_status($ip, $port)
     {
-        $array = [$key => ['value' => $value, 'time' => $time]];
-        $this->cache = array_merge($this->cache, $array);
+        $fp = @fsockopen($ip, $port, $errno, $errstr, 1);
+        if ($fp)
+            return true;
+
+        return false;
     }
 
     public function checkInterval(&$events, $event_name)
@@ -99,8 +107,8 @@ Class dBot
             $events[$event_name]['time'] = time();
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
 }
