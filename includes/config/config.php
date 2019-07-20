@@ -25,7 +25,7 @@ $config['function'] =
                 'names' => ['✯ daffyy.pro ✯ - Prywatny timspik czy', "✯ daffyy.pro ✯ - Programista / Web Developer / Freelancer", 
                 '✯ daffyy.pro ✯ - Gramy i kodzimy!'],
 
-                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+                'interval' => ['hours' => 0, 'minutes' => 2, 'seconds' => 0],
             ],
 
             'online_server_name' => 
@@ -39,7 +39,8 @@ $config['function'] =
             'welcome_message' => 
             [
                 'status' => true,
-                'message' => 'test [nick] [groups]',
+                'message' => 'Witaj [b][nick][/b] na [b][server_name][/b],
+                Twoje grupy: [b][groups][/b], na serwerze jest [b][online][/b] osoób a my jesteśmy online od [b][uptime][/b]',
 
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 1],
             ],
@@ -64,8 +65,8 @@ $config['function'] =
                 'status' => true,
                 'channels' =>
                 [
-                    69 => ['group' => 10, 'online' => 'Pasożyt ✔', 'offline' => 'Pasożyt niet'], // Tylko nazwa kanału
-                    70 => 10, // Nazwa i opis
+                    //69 => ['group' => 10, 'online' => 'Pasożyt ✔', 'offline' => 'Pasożyt niet'], // Tylko nazwa kanału
+                    69 => 10, // Nazwa i opis
                 ],
                 'channel_name' => 'Czy pasożyt online? [count]',
                 'description' => ['head' => '[center][b]Lista online[/b][/center]\n\n', 'status' => ['online' => '[nick] - ONLINE', 'offline' => '[nick] - OFFLINE']],
@@ -77,7 +78,7 @@ $config['function'] =
         2 =>
         [
             'instance_name' => '⭐ dBot @ Mandaryna',
-            'functions' => ['channel_poke', 'channel_group', 'anty_vpn'],
+            'functions' => ['channel_poke', 'channel_group', 'channel_create', 'censorship', 'anty_vpn'],
 
             'channel_poke' =>
             [
@@ -104,6 +105,31 @@ $config['function'] =
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
             ],
 
+            'channel_create' =>
+            [
+                'status' => true,
+                'channels' =>
+                [
+                    69 => 151,
+                ],
+                'group' => 5,
+                'count' => 2,
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+            ],
+
+            'censorship' =>
+            [
+                'status' => true,
+                'words' =>
+                [
+                    'kutas', 'jeba', 'huj', 'cipa', 'dziwka', 'pizda', 'kurwa', 'spierdal',
+                ],
+                'reason' => 'Twój nick zawiera niecenzuralny wyraz!',
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 20],
+            ],
+
             'anty_vpn' =>
             [
                 'status' => false,
@@ -113,8 +139,7 @@ $config['function'] =
                 'allowed' => 10,
 
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 30],
-
-            ]
+            ],
 
         ]
 ];

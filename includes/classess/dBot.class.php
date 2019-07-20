@@ -47,6 +47,7 @@ Class dBot
             {
                 $this->joined = $this->query->getElement('data', $this->query->execOwnCommand(2, 'servernotifyregister event=channel id='.$config['connect']['lobby']));
                 $this->clients = $this->query->getElement('data', $this->query->clientList('-groups -voice -away -times -uid -country -info -ip'));
+                $this->channels = $this->query->getElement('data', $this->query->channelList());
                 $this->serverInfo = $this->query->getElement('data', $this->query->serverInfo());
                 foreach($config['function']['functions'] as $function)
                 {
@@ -77,7 +78,7 @@ Class dBot
 
     public function info()
     {
-        return ['clients' => $this->clients, 'server' => $this->serverInfo];
+        return ['clients' => $this->clients, 'server' => $this->serverInfo, 'channels' => $this->channels];
     }
 
     public function joined()
@@ -101,13 +102,53 @@ Class dBot
         return false;
     }
 
-    public function server_status($ip, $port)
+    public function server_status($ip, $port, $query_port = null, $players = false)
     {
+        $status = false;
         $fp = @fsockopen($ip, $port, $errno, $errstr, 1);
         if ($fp)
-            return true;
+            $status = true;
+        
+        $fp = @fsockopen("udp://$ip", $port, $errno, $errstr, 1);
+        if ($fp)
+            $status = true;
 
-        return false;
+        return $status;
+    }
+
+    public function replace_message($client = null, $group = null, $message)
+    {
+        $info = $this->info();
+        $uptime = $this->query->convertSecondsToArrayTime($info['server']['virtualserver_uptime']);
+        return str_replace(
+        [
+            '[online]',
+            '[maxonline]',
+            '[query]',
+            '[group]',
+            '[uptime]',
+            '[server_name]',
+            '[client_connections]',
+            '[packet_loss]',
+            '[channels]',
+            '[nick]',
+            '[country]',
+            '[date]'
+        ],  
+        [
+            $info['server']['virtualserver_clientsonline'] - $info['server']['virtualserver_queryclientsonline'],
+            $info['server']['virtualserver_maxclients'],
+            $info['server']['virtualserver_queryclientsonline'],
+            $this->group_name($group),
+            $uptime['days'].' dni '.$uptime['hours'].' godzin '.$uptime['minutes'].' minut',
+            $info['server']['virtualserver_name'],
+            $info['server']['virtualserver_client_connections'],
+            $info['server']['virtualserver_total_packetloss_total'],
+            $info['server']['virtualserver_channelsonline'],
+            $client['client_nickname'],
+            $client['client_country'],
+            date('d.m.Y G:i:s', time()),
+        ],$message);
     }
 
     public function group_name($group)

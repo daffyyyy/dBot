@@ -7,7 +7,7 @@ function channel_poke()
 
     if ($cfg['status'] === true)
     {
-        $cache->get("channel_poke", $result);
+        $cache->get(__FUNCTION__, $result);
 
         foreach ($cfg['channels'] as $channel => $value)
         {
@@ -35,7 +35,7 @@ function channel_poke()
 
 function poke_admins($group, $message)
 {
-    global $config, $dBot;
+    global $dBot;
 
     $admins = $dBot->query()->serverGroupClientList($group)['data'];
     for ($i = 0; $i <= count($admins) - 1; $i++)

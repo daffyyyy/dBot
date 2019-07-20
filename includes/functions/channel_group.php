@@ -15,15 +15,7 @@ function channel_group()
                 {
                     for ($i = 0; $i <= count($onChannel) - 1; $i++)
                     {
-                        $group_name = $dBot->query()->serverGroupList()['data'];
-                        for ($v = 0; $v <= count($group_name) - 1; $v++)
-                        {
-                            if ($group_name[$v]['sgid'] == $value)
-                            {
-                                $group_name = $group_name[$v]['name'];
-                                break;
-                            }
-                        }
+                        $message = $dBot->replace_message(null, $value, $cfg['user_message']);
                         if ($dBot->hasGroup($onChannel[$i]['clid'], $value))
                         {
                             $dBot->query()->serverGroupDeleteClient($value, $onChannel[$i]['client_database_id']);
@@ -32,7 +24,7 @@ function channel_group()
                         }
                         $dBot->query()->serverGroupAddClient($value, $onChannel[$i]['client_database_id']);
                         $dBot->query()->clientMove($onChannel[$i]['clid'], $config['connect']['connect_channel']);
-                        $dBot->query()->sendMessage(1, $onChannel[$i]['clid'], str_replace('[group]', $group_name, $cfg['user_message']));
+                        $dBot->query()->sendMessage(1, $onChannel[$i]['clid'], $message);
                     }
                 }
             }

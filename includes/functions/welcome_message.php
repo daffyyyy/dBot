@@ -20,20 +20,21 @@ function welcome_message()
 function edit_message($client, $message)
 {
     global $dBot;
+    $message = $dBot->replace_message($client, null, $message);
     $groups_name = "";
-    for ($i = 0; $i <= count($groups = explode(',', $client['client_servergroups'])) -1; $i++)
+    $groups = $groups = explode(',', $client['client_servergroups']);
+    for ($i = 0; $i <= count($groups) -1; $i++)
     {
-        $groups_name .= $dBot->group_name($groups[$i]).', ';
+        if (end($groups) == $groups[$i])
+            $groups_name .= $dBot->group_name($groups[$i]);
+        else
+            $groups_name .= $dBot->group_name($groups[$i]).', ';
     }
     return str_replace(
         [
-            '[nick]',
-            '[country]',
             '[groups]',
         ],
         [
-            $client['client_nickname'],
-            $client['client_country'],
             $groups_name,
         ],
         $message

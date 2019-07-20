@@ -7,7 +7,7 @@ function online_server_name()
     $cfg = $config['function'][__FUNCTION__];
     if ($cfg['status'] == true)
     {
-        $info = $dBot->info()['server'];
-        $dBot->query()->serverEdit(['virtualserver_name' => str_replace(['[online]', '[max]'], [$info['virtualserver_clientsonline'] - $info['virtualserver_queryclientsonline'], $info['virtualserver_maxclients']], $cfg['name'])]);
+        $name = $dBot->replace_message(null, null, $cfg['name']);
+        $dBot->query()->serverEdit(['virtualserver_name' => $name]);
     }
 }
