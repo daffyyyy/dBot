@@ -11,13 +11,13 @@ function welcome_message()
         {
             if (array_key_exists('notifycliententerview', $joined[$i]))
             {
-                $dBot->query()->sendMessage(1,$joined[$i]['clid'], edit_message($joined[$i], $cfg['message']));
+                $dBot->query()->sendMessage(1,$joined[$i]['clid'], welcome_edit_message($joined[$i], $cfg['message']));
             }    
         }
     }
 }
 
-function edit_message($client, $message)
+function welcome_edit_message($client, $message)
 {
     global $dBot;
     $message = $dBot->replace_message($client, null, $message);

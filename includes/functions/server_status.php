@@ -10,7 +10,7 @@ function server_status()
         foreach ($cfg['channels'] as $channel => $value)
         {
             $status = $dBot->server_status($value['ip'], $value['port']) ? 'ONLINE' : 'OFFLINE';
-            $dBot->query()->channelEdit($channel, ['channel_name' => str_replace('[status]', $status, $value['name'])]);
+            $dBot->query()->channelEdit($channel, ['channel_name' => str_replace('[status]', $status, $value['name']), 'channel_description' => $dBot->footer()]);
         }
     }
 }

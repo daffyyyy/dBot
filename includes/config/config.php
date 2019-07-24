@@ -17,30 +17,54 @@ $config['function'] =
         1 => 
         [
             'instance_name' => '⭐ dBot @ Olcia',
-            'functions' => ['random_server_name', 'server_status', 'group_online', 'online_server_name', 'welcome_message'],
+            'functions' => ['multi_functions', 'server_status', 'forum_stats', 'group_online', 'welcome_message', 'time_spent'],
 
-            'random_server_name' => 
+            'multi_functions' =>
             [
                 'status' => true,
-                'names' => ['✯ daffyy.pro ✯ - Prywatny timspik czy', "✯ daffyy.pro ✯ - Programista / Web Developer / Freelancer", 
-                '✯ daffyy.pro ✯ - Gramy i kodzimy!'],
+                'server_name' => 
+                [
+                    'status' => false,
+                    'name' => 'Nazwa serwera - [online]/[maxonline]',  // '[online]','[maxonline]','[query]','[uptime]','[server_name]','[packet_loss]','[channels]','[date]'
+                ],
+                'random_server_name' => 
+                [
+                    'status' => true,
+                    'names' => ['✯ daffyy.pro ✯ - Prywatny timspik czy', "✯ daffyy.pro ✯ - Programista / Web Developer / Freelancer", 
+                    '✯ daffyy.pro ✯ - Gramy i kodzimy!'],   // '[online]','[maxonline]','[query]','[uptime]','[server_name]','[packet_loss]','[channels]','[date]'
+                ],  
+                'clock' => 
+                [
+                    'status' => true,
+                    'name' => '[cspacer] Aktualna godzina: [clock]',
+                    'channel' => 788, 
+                ],
+                'date' => 
+                [
+                    'status' => true,
+                    'name' => '[cspacer] Aktualna data: [date]',
+                    'channel' => 789, 
+                ],
+                'name_day' => 
+                [
+                    'status' => false,
+                    'channel' => 153, 
+                ],
+                'record_online' =>
+                [
+                    'status' => true,
+                    'name' => '[cspacer] Rekord: [record]',
+                    'channel' => 790,
+                ],
 
-                'interval' => ['hours' => 0, 'minutes' => 2, 'seconds' => 0],
-            ],
-
-            'online_server_name' => 
-            [
-                'status' => false,
-                'name' => 'Nazwa serwera - [online]/[max]',
-
-                'interval' => ['hours' => 0, 'minutes' => 1, 'seconds' => 0],
+                'interval' => ['hours' => 0, 'minutes' => 1, 'seconds' => 0],  
             ],
 
             'welcome_message' => 
             [
                 'status' => true,
-                'message' => 'Witaj [b][nick][/b] na [b][server_name][/b],
-                Twoje grupy: [b][groups][/b], na serwerze jest [b][online][/b] osoób a my jesteśmy online od [b][uptime][/b]',
+                'message' => 'Witaj [b][nick][/b] na [b][server_name][/b],\n
+                Twoje grupy: [b][groups][/b], na serwerze jest [b][online][/b] osób a my jesteśmy online od [b][uptime][/b]',  // '[online]','[maxonline]','[query]','[uptime]','[server_name]','[packet_loss]','[channels]','[nick]','[date]','[nick]','[country]','[client_connections]','[groups]'
 
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 1],
             ],
@@ -65,20 +89,51 @@ $config['function'] =
                 'status' => true,
                 'channels' =>
                 [
-                    //69 => ['group' => 10, 'online' => 'Pasożyt ✔', 'offline' => 'Pasożyt niet'], // Tylko nazwa kanału
-                    69 => 10, // Nazwa i opis
+                    41 => ['group' => 10, 'online' => 'Support & Reklamacje ✔', 'offline' => 'Support & Reklamacje ❌', 'away' => 'Support & Reklamacje ⏳'], // Tylko nazwa kanału
+                    //69 => 10, // Nazwa i opis
                 ],
                 'channel_name' => 'Czy pasożyt online? [count]',
-                'description' => ['head' => '[center][b]Lista online[/b][/center]\n\n', 'status' => ['online' => '[nick] - ONLINE', 'offline' => '[nick] - OFFLINE']],
+                'description' => ['head' => '[center][b]Lista online[/b][/center]\n\n', 'status' => ['online' => '[nick] - ONLINE', 'offline' => '[nick] - OFFLINE', 'away' => '[nick] - AWAY']],
 
                 'interval' => ['hours' => 0, 'minutes' => 1, 'seconds' => 0],
             ],
+
+            'forum_stats' =>
+            [
+                'status' => true,
+                'site' => 'https://onecie.pl/',
+                'stats' => ['span[id=all_topics]', 'span[id=all_posts]', 'span[id=all_users]'],
+                'channels' =>
+                [
+                    792,
+                    793,
+                    794
+                ],
+
+                'interval' => ['hours' => 0, 'minutes' => 5, 'seconds' => 0],
+            ],
+
+            'time_spent' =>
+            [
+                'status' => true,
+
+                'time_ranks_status' => true,
+                'time_ranks' => 
+                [
+                    50 => 12,
+                    70 => 13,
+                    100 => 14,
+                    110 => 15,
+                ],
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 10],
+            ]
 
         ],
         2 =>
         [
             'instance_name' => '⭐ dBot @ Mandaryna',
-            'functions' => ['channel_poke', 'channel_group', 'channel_create', 'censorship', 'anty_vpn'],
+            'functions' => ['channel_poke', 'channel_create', 'channel_group', 'auto_group'],
 
             'channel_poke' =>
             [
@@ -89,6 +144,20 @@ $config['function'] =
                 ],
                 'admin_message' =>  'Ktoś oczekuje twojej pomocy!',
                 'user_message' =>   'Administracja została powiadomiona o twojej obecności',
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+            ],
+
+            'channel_create' =>
+            [
+                'status' => false,
+                'channels' =>
+                [
+                    69 => 785,
+                ],
+                'group' => 5,
+                'subchannels' => 2,
+                'empty_days' => 30,
 
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
             ],
@@ -105,29 +174,45 @@ $config['function'] =
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
             ],
 
-            'channel_create' =>
+            'auto_group' =>
             [
                 'status' => true,
-                'channels' =>
+                'groups' =>
                 [
-                    69 => 151,
+                    10 => ['uid' => 'dfuTNJShoKvYr36X6Rjj59IGA50='],
+                    //3213 => ['ip' => '127.0.0.1'],
                 ],
-                'group' => 5,
-                'count' => 2,
 
-                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 3],
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 1],
             ],
 
+        ],
+        3 =>
+        [
+            'instance_name' => '⭐ dBot @ Majeczka',
+            'functions' => ['censorship', 'group_protect', 'anty_vpn', 'ip_limit', 'mass_ban_protect', 'myts_protect'],
             'censorship' =>
             [
                 'status' => true,
                 'words' =>
                 [
-                    'kutas', 'jeba', 'huj', 'cipa', 'dziwka', 'pizda', 'kurwa', 'spierdal',
+                    'kutas', 'jeba', 'huj', 'cipa', 'dziwka', 'pizda', 'kurwa', 'spierdal', '.pl', '.com', '.eu', 'speak.', 'voice.', 'ts3.', '.ts3',
                 ],
-                'reason' => 'Twój nick zawiera niecenzuralny wyraz!',
+                'reason' => 'Twój nick zawiera niedozwolony wyraz!',
 
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 20],
+            ],
+
+            'group_protect' =>
+            [
+                'status' => true,
+                'groups' =>
+                [
+                    10 => ['uid' => ['dfuTNJShoKvYr36X6Rjj59IGA50=', 'XlHzI/6mG10N91470xteBuudBdY=']]
+                ],
+                //'reason' => 'Twój nick zawiera niecenzuralny wyraz!',
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 2],
             ],
 
             'anty_vpn' =>
@@ -136,10 +221,38 @@ $config['function'] =
                 'email' => 'xdaffe01@gmail.com',
                 'type' => 1,
                 'reason' => 'Wyłącz program do maskowania IP!',
+                'time' => 5,
                 'allowed' => 10,
 
                 'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 30],
             ],
+
+            'ip_limit' =>
+            [
+                'status' => true,
+                'email' => 'xdaffe01@gmail.com',
+                'type' => 2,
+                'reason' => 'Maksymalnie [count] połączeń!',
+                'time' => 1,
+                'allowed' => ['127.0.0.1', ''],
+                'how_many' => 3,
+
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 5],
+            ],
+
+            'mass_ban_protect' =>
+            [
+                'status' => true,
+                'how_many' => 10,
+                'time' => 5,
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 1],
+            ],
+
+            'myts_protect' =>
+            [
+                'status' => true,
+                'interval' => ['hours' => 0, 'minutes' => 0, 'seconds' => 1],
+            ]
 
         ]
 ];

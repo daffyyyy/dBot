@@ -22,23 +22,29 @@ function group_online()
             {
                 $clients_array[] = $clients_group[$i];
             }
-
             for ($v = 0; $v <= count($clients_array) - 1; $v++)
             {
-                if ($find = $dBot->query()->clientFind($clients_array[$v]['client_nickname'])['data'][0])
+                $away = false;
+                if ($find = $dBot->query()->clientGetIds($clients_array[$v]['client_unique_identifier'])['data'][0])
                 {
+                    if ($dBot->query()->clientInfo($find['clid'])['data']['client_away'] > 0)
+                        $away = true;
+
                     $online++;
-                    if (!is_array($value))
-                        $desc .= '[URL=client://'.$find['clid'].'/'.$clients_array[$v]['client_unique_identifier'].']'.str_replace(['[nick]'], $clients_array[$v]['client_nickname'], 
-                        $cfg['description']['status']['online']).'[/URL]'.ENDLINE;
+                    if (!is_array($value) && !$away)
+                        $desc .= '[URL=client://'.$find['clid'].'/'.$clients_array[$v]['client_unique_identifier'].']'.str_replace(['[nick]'], $clients_array[$v]['client_nickname'], $cfg['description']['status']['online']).'[/URL]'.ENDLINE;
+                    elseif  (!is_array($value) && $away)
+                        $desc .= '[URL=client://'.$find['clid'].'/'.$clients_array[$v]['client_unique_identifier'].']'.str_replace(['[nick]'], $clients_array[$v]
+                        ['client_nickname'],$cfg['description']['status']['away']).'[/URL]'.ENDLINE;
                 }
                 else
                 {
                     if (!is_array($value))
-                        $desc .= '[URL=client://'.$find['clid'].'/'.$clients_array[$v]['client_unique_identifier'].']'.str_replace(['[nick]'], $clients_array[$v]['client_nickname'], 
-                        $cfg['description']['status']['offline']).'[/URL]'.ENDLINE;
+                        $desc .= '[URL=client://'.$find['clid'].'/'.$clients_array[$v]['client_unique_identifier'].']'.str_replace(['[nick]'], $clients_array[$v]['client_nickname'], $cfg['description']['status']['offline']).'[/URL]'.ENDLINE;
                 }
             }
+            if (isset($desc))
+                $desc .= $dBot->footer();
             if (!is_array($value))
                 $dBot->query()->channelEdit($channel, ['channel_name' => str_replace('[count]', $online, $cfg['channel_name']), 'channel_description' => $desc]);
             else

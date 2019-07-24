@@ -5,7 +5,7 @@ define('AUTHOR', 'daffyy');
 define('VERSION', 'BETA');
 define('ENDLINE', "\n");
 
-$include = ['includes/classess/ts3admin.class.php', 'includes/config/config.php', 'includes/classess/dBot.class.php', 'includes/classess/cache.class.php'];
+$include = ['includes/classess/ts3admin.class.php', 'includes/config/config.php', 'includes/classess/dBot.class.php', 'includes/classess/cache.class.php', 'includes/classess/simple_html_dom.php'];
 for ($i = 0; $i <= count($include) - 1; $i++)
 	include_once $include[$i];
 
@@ -15,13 +15,17 @@ $cache = new cache();
 $events = array();
 $instance = getopt("i:");
 
+$root_config = $config;
 if(!isset($instance['i']) || !isset($config['function'][$instance['i']])) 
 	die("Podana instancja nie istnieje!".ENDLINE);
 else 
 	$config['function'] = $config['function'][$instance['i']];
 
+
 echo "[⭐] Startowanie aplikacji ".APP_NAME.' '.VERSION.ENDLINE;
 echo "[⭐] Autor: ".AUTHOR.ENDLINE;
 
 $dBot->run();
+	
+
 ?>

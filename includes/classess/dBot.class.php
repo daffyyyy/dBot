@@ -27,6 +27,7 @@ Class dBot
 
         if ($this->query->getElement('success', $this->query->connect()))
         {
+            $connected = true;
             echo "[⭐] Włączanie instancji".ENDLINE;
             if ($this->query->getElement('success', $this->query->login($config['connect']['login'], $config['connect']['password']))){
                 echo "[⭐] Zalogowano na serwer".ENDLINE;
@@ -42,12 +43,11 @@ Class dBot
 
             $this->query->execOwnCommand(0, 'servernotifyregister event=server');
             //var_dump($this->query->execOwnCommand(0, 'servernotifyregister event=textprivate'));
-
             while (true)
             {
                 $this->joined = $this->query->getElement('data', $this->query->execOwnCommand(2, 'servernotifyregister event=channel id='.$config['connect']['lobby']));
                 $this->clients = $this->query->getElement('data', $this->query->clientList('-groups -voice -away -times -uid -country -info -ip'));
-                $this->channels = $this->query->getElement('data', $this->query->channelList());
+                $this->channels = $this->query->getElement('data', $this->query->channelList('-seconds_empty'));
                 $this->serverInfo = $this->query->getElement('data', $this->query->serverInfo());
                 foreach($config['function']['functions'] as $function)
                 {
@@ -58,17 +58,15 @@ Class dBot
                 }
                 sleep(1);
             }
-            echo 1;
         }
         else{
-            die("[⭐] Nie udało się połączyć sprawdz config").ENDLINE;
+            die("[⭐] Nie udało się połączyć sprawdź config".ENDLINE);
         }
     }
 
     public function run()
     {
         $this->connect();
-        echo 1;
     }
 
     public function query()
@@ -118,8 +116,10 @@ Class dBot
 
     public function replace_message($client = null, $group = null, $message)
     {
+        global $cache;
         $info = $this->info();
         $uptime = $this->query->convertSecondsToArrayTime($info['server']['virtualserver_uptime']);
+        $cache->get('record_online', $record);
         return str_replace(
         [
             '[online]',
@@ -127,6 +127,7 @@ Class dBot
             '[query]',
             '[group]',
             '[uptime]',
+            '[record]',
             '[server_name]',
             '[client_connections]',
             '[packet_loss]',
@@ -141,6 +142,7 @@ Class dBot
             $info['server']['virtualserver_queryclientsonline'],
             $this->group_name($group),
             $uptime['days'].' dni '.$uptime['hours'].' godzin '.$uptime['minutes'].' minut',
+            $record,
             $info['server']['virtualserver_name'],
             $info['server']['virtualserver_client_connections'],
             $info['server']['virtualserver_total_packetloss_total'],
@@ -174,6 +176,11 @@ Class dBot
         }
 
         return false;
+    }
+
+    public function footer()
+    {
+        return '\n\n[hr]\n[right][img]https://static.daffyy.pro/projects/dBot/assets/img/logo.png[/img]';
     }
 
 }

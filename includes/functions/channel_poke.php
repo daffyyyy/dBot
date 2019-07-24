@@ -17,14 +17,16 @@ function channel_poke()
                 {
                     for ($i = 0; $i <= count($onChannel) - 1; $i++)
                     {
-                        if (array_key_exists($onChannel[$i]['client_database_id'], (array)$result) || $dBot->hasGroup($onChannel[$i]['clid'], $value))
+                        if (array_key_exists($onChannel[$i]['client_database_id'], (array)$result))
                             continue;
-
+                        if ($dBot->hasGroup($onChannel[$i]['clid'], $value))
+                            return;
+                            
                             poke_admins($value, $cfg['admin_message']);
                             $dBot->query()->sendMessage(1,$onChannel[$i]['clid'] , $cfg['user_message']);
                             $result[$onChannel[$i]['client_database_id']] = $onChannel[$i];
 
-                            $cache->set("channel_poke", $result, 60);
+                            $cache->set(__FUNCTION__, $result, 60);
                             $cache->saveCache();
                     }
                 }

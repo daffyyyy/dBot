@@ -1,6 +1,6 @@
 <?php
 
-function online_server_name()
+function server_name()
 {
     global $config, $dBot;
     

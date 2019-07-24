@@ -9,6 +9,14 @@ function channel_create()
     {
         foreach ($cfg['channels'] as $channel => $value)
         {
+            $channels_time = $dBot->info()['channels'];
+            for ($a = 0; $a <= count($channels_time) - 1; $a++)
+            {
+                $empty_time = $dBot->query()->convertSecondsToArrayTime($channels_time[$a]['seconds_empty']);
+                if ($empty_time['days'] > $cfg['empty_days'] && $channels_time[$a]['pid'] == $value)
+                    $dBot->query()->channelDelete($channels_time[$a]['cid']);
+
+            }
             $onChannel = $dBot->query()->channelClientList($channel)['data'];
             if (count($onChannel) > 0)
             {
@@ -39,7 +47,7 @@ function channel_create()
                         
                         $pass = rand(1000, 9999);
                         $main = $dBot->query()->channelCreate(['channel_name' => $number+$i.'. Kanał '.$onChannel[$i]['client_nickname'], 'CHANNEL_FLAG_PERMANENT' => 1, 'CHANNEL_PASSWORD' => $pass, 'CPID' => $value])['data'];
-                        for ($v = 1; $v <= $cfg['count']; $v++)
+                        for ($v = 1; $v <= $cfg['subchannels']; $v++)
                         {
                             $dBot->query()->channelCreate(['channel_name' => 'Podkanał '.$v, 'CHANNEL_FLAG_PERMANENT' => 1, 'CPID' => $main['cid']]);
                         }
